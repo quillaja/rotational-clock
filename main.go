@@ -64,10 +64,11 @@ func run() {
 		}
 
 		// position clock within window
+		focus := Hour
 		win.SetMatrix(pixel.IM.
 			Moved(win.Bounds().Center()).
-			Moved(clock.positions[Month].position.Scaled(-1)).
-			Scaled(win.Bounds().Center(), pow2(Month)))
+			Moved(clock.positions[focus].position.Scaled(-1)).
+			Scaled(win.Bounds().Center(), pow2(focus)))
 
 		// draw to window
 		win.Clear(color.Black)
@@ -149,7 +150,10 @@ func (p positions) locForIndex(i int, radius float64) pixel.Vec {
 		return pixel.ZV
 	}
 
-	dirUnitCircle := pixel.V(math.Cos(p[i-1].angle), math.Sin(p[i-1].angle))
+	// use sin for x and cos for y here to "rotate" everything by 90 degrees
+	// making 0 be at "12 o'clock"
+	angle := p[i-1].angle + p[i].angle
+	dirUnitCircle := pixel.V(math.Sincos(angle))
 	return p[i-1].position.Add(dirUnitCircle.Scaled(radius * powHalf(i)))
 }
 
