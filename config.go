@@ -5,6 +5,7 @@ type Configuration struct {
 	TargetFPS         int
 	RotationDirection int
 	RotationMode      int
+	RadiusOffset      int
 	BackgroundColor   string
 }
 
@@ -14,6 +15,7 @@ func DefaultConfig() Configuration {
 		TargetFPS:         60,
 		RotationDirection: CCW,
 		RotationMode:      BaseOnParentCenterLine,
-		BackgroundColor:   "#DDD",
+		RadiusOffset:      -37,
+		BackgroundColor:   "#CCC",
 	}
 }

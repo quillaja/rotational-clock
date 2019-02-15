@@ -74,11 +74,14 @@ func run() {
 		bgcolor = color.White
 	}
 
-	for !win.Closed() {
+	for !win.Closed() && !win.JustPressed(pixelgl.KeyQ) {
 		start := time.Now()
 
 		// recalculate sprite positions and rotations
-		clock.positions.calculate(start, textureScale*textureSize.Y/2, config.RotationMode)
+		clock.positions.calculate(
+			start,
+			(math.Max(textureSize.XY())/2)+(2*float64(config.RadiusOffset)),
+			config.RotationMode)
 
 		// draw each sprite
 		batch.Clear()
@@ -86,14 +89,14 @@ func run() {
 			clock.faces[i].Draw(batch, pixel.IM.
 				Rotated(pixel.ZV, clock.positions[i].angle*float64(config.RotationDirection)).
 				Scaled(pixel.ZV, textureScale*powHalf(i)).
-				Moved(clock.positions[i].position))
+				Moved(clock.positions[i].position.Scaled(textureScale)))
 		}
 
 		// position clock within window
 		getFocus(&focus, win)
 		win.SetMatrix(pixel.IM.
 			Moved(win.Bounds().Center()).
-			Moved(clock.positions[focus].position.Scaled(-1)).
+			Moved(clock.positions[focus].position.Scaled(-textureScale)).
 			Scaled(win.Bounds().Center(), pow2(focus)))
 
 		// draw to window
