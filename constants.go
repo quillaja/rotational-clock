@@ -9,6 +9,20 @@ import (
 // TwoPi = 2*Pi
 const TwoPi = math.Pi * 2
 
+// The rotation direction.
+const (
+	CW  = -1
+	CCW = 1
+)
+
+// RotationMode in configuration.
+const (
+	CenterOnZeroDegrees      = 1 << iota
+	CenterOnParentCenterLine = 1 << iota
+	BaseOnParentCenterLine   = 1 << iota
+	RevolvesWithinParent     = CenterOnParentCenterLine | BaseOnParentCenterLine
+)
+
 // These are used for array indices and various scale calculations.
 const (
 	Year = iota

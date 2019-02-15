@@ -35,7 +35,7 @@ type positions []pos
 
 // calculate uses the current time to determine the position and rotation
 // for each of the len(p) sprites.
-func (p positions) calculate(now time.Time, radius float64) {
+func (p positions) calculate(now time.Time, radius float64, centerMode int) {
 
 	for i := Year; i <= Second; i++ {
 		angle := 0.0
@@ -43,6 +43,7 @@ func (p positions) calculate(now time.Time, radius float64) {
 		switch i {
 		case Year:
 			angle = float64(now.YearDay()-1) / 365.0
+
 		case Month:
 			// uses idiosyncrasy of time package to figure out the number
 			// of days in the current month.
@@ -64,23 +65,34 @@ func (p positions) calculate(now time.Time, radius float64) {
 		}
 
 		p[i].angle = angle * TwoPi
-		p[i].position = p.locForIndex(i, radius)
+		p[i].position = p.locForIndex(i, radius, centerMode)
 	}
 
 }
 
 // locForIndex calculates the position of the component at i given the initial
 // radius.
-//    loc = prev_loc + radius * 2^(-i) * Vec2((cos&sin(prev_angle))
+//    loc = prev_loc + radius * 2^(-i) * Vec2(sincos(prev_angle))
 // except when i==0, loc = (0,0)
-func (p positions) locForIndex(i int, radius float64) pixel.Vec {
+func (p positions) locForIndex(i int, radius float64, centerMode int) pixel.Vec {
 	if i == 0 {
 		return pixel.ZV
 	}
 
+	angle := 0.0
+	switch centerMode {
+	case CenterOnZeroDegrees:
+		// no nothing
+	case BaseOnParentCenterLine:
+		angle = p[i].angle
+	case CenterOnParentCenterLine:
+		angle = p[i-1].angle
+	case RevolvesWithinParent:
+		angle = p[i].angle + p[i-i].angle
+	}
+
 	// use sin for x and cos for y here to "rotate" everything by 90 degrees
 	// making 0 be at "12 o'clock"
-	angle := p[i].angle //+ p[i-1].angle
 	dirUnitCircle := pixel.V(math.Sincos(angle))
 	return p[i-1].position.Add(dirUnitCircle.Scaled(radius * powHalf(i)))
 }
