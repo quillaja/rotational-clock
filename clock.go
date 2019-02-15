@@ -93,6 +93,6 @@ func (p positions) locForIndex(i int, radius float64, centerMode int) pixel.Vec 
 
 	// use sin for x and cos for y here to "rotate" everything by 90 degrees
 	// making 0 be at "12 o'clock"
-	dirUnitCircle := pixel.V(math.Sincos(angle))
+	dirUnitCircle := pixel.V(math.Sincos(-1 * float64(config.RotationDirection) * angle))
 	return p[i-1].position.Add(dirUnitCircle.Scaled(radius * powHalf(i)))
 }
