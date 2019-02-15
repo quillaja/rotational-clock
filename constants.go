@@ -1,6 +1,10 @@
 package main
 
-import "math"
+import (
+	"math"
+
+	"github.com/faiface/pixel/pixelgl"
+)
 
 // TwoPi = 2*Pi
 const TwoPi = math.Pi * 2
@@ -17,3 +21,8 @@ const (
 
 // unused
 // var daysInMonth = [12]int{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+
+// Focus is the buttons to press to zoom into the respective time scales.
+var Focus = [...]pixelgl.Button{
+	pixelgl.KeyY, pixelgl.KeyO, pixelgl.KeyD,
+	pixelgl.KeyH, pixelgl.KeyM, pixelgl.KeyS}
