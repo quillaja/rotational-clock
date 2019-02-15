@@ -12,6 +12,7 @@ import (
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
+	"github.com/lucasb-eyer/go-colorful"
 )
 
 var theme image.Image
@@ -67,6 +68,12 @@ func run() {
 	targetFPS := 1.0 / float64(config.TargetFPS)
 	focus := Year
 
+	var bgcolor color.Color
+	bgcolor, err = colorful.Hex(config.BackgroundColor)
+	if err != nil {
+		bgcolor = color.White
+	}
+
 	for !win.Closed() {
 		start := time.Now()
 
@@ -90,7 +97,7 @@ func run() {
 			Scaled(win.Bounds().Center(), pow2(focus)))
 
 		// draw to window
-		win.Clear(color.White)
+		win.Clear(bgcolor)
 		batch.Draw(win)
 		win.Update()
 
