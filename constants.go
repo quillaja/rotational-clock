@@ -17,10 +17,10 @@ const (
 
 // RotationMode in configuration.
 const (
-	CenterOnZeroDegrees      = 1 << iota
-	CenterOnParentCenterLine = 1 << iota
-	BaseOnParentCenterLine   = 1 << iota
-	RevolvesWithinParent     = CenterOnParentCenterLine | BaseOnParentCenterLine
+	DoNotRotate = iota
+	AngleIsParentAngle
+	AngleRelativeToZero
+	AngleRelativeToParent
 )
 
 // These are used for array indices and various scale calculations.

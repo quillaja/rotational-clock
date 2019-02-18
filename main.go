@@ -22,14 +22,14 @@ var config Configuration
 func run() {
 
 	// window and texture sizing info
-	textureSize := pixel.V(float64(theme.Bounds().Dx()/6), float64(theme.Bounds().Dy()))
+	numFaces := 6
+	textureSize := pixel.V(float64(theme.Bounds().Dx()/numFaces), float64(theme.Bounds().Dy()))
 
 	if winSize == pixel.ZV {
 		maxtex := math.Max(textureSize.XY())
 		winSize = pixel.V(maxtex, maxtex)
 	}
 	textureScale := math.Min(winSize.XY()) / math.Max(textureSize.XY())
-	numFaces := 6
 
 	// configure and create window
 	cfg := pixelgl.WindowConfig{
@@ -81,7 +81,7 @@ func run() {
 		clock.positions.calculate(
 			start,
 			(math.Max(textureSize.XY())/2)+(2*float64(config.RadiusOffset)),
-			config.RotationMode)
+			config)
 
 		// draw each sprite
 		batch.Clear()

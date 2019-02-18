@@ -14,7 +14,7 @@ func DefaultConfig() Configuration {
 	return Configuration{
 		TargetFPS:         60,
 		RotationDirection: CCW,
-		RotationMode:      BaseOnParentCenterLine,
+		RotationMode:      AngleRelativeToZero,
 		RadiusOffset:      -37,
 		BackgroundColor:   "#CCC",
 	}

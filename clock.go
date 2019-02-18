@@ -35,7 +35,7 @@ type positions []pos
 
 // calculate uses the current time to determine the position and rotation
 // for each of the len(p) sprites.
-func (p positions) calculate(now time.Time, radius float64, centerMode int) {
+func (p positions) calculate(now time.Time, radius float64, cfg Configuration) {
 
 	for i := Year; i <= Second; i++ {
 		angle := 0.0
@@ -65,7 +65,7 @@ func (p positions) calculate(now time.Time, radius float64, centerMode int) {
 		}
 
 		p[i].angle = angle * TwoPi
-		p[i].position = p.locForIndex(i, radius, centerMode)
+		p[i].position = p.locForIndex(i, radius, cfg)
 	}
 
 }
@@ -74,25 +74,25 @@ func (p positions) calculate(now time.Time, radius float64, centerMode int) {
 // radius.
 //    loc = prev_loc + radius * 2^(-i) * Vec2(sincos(prev_angle))
 // except when i==0, loc = (0,0)
-func (p positions) locForIndex(i int, radius float64, centerMode int) pixel.Vec {
+func (p positions) locForIndex(i int, radius float64, cfg Configuration) pixel.Vec {
 	if i == 0 {
 		return pixel.ZV
 	}
 
 	angle := 0.0
-	switch centerMode {
-	case CenterOnZeroDegrees:
+	switch cfg.RotationMode {
+	case DoNotRotate:
 		// no nothing
-	case BaseOnParentCenterLine:
+	case AngleRelativeToZero:
 		angle = p[i].angle
-	case CenterOnParentCenterLine:
+	case AngleIsParentAngle:
 		angle = p[i-1].angle
-	case RevolvesWithinParent:
+	case AngleRelativeToParent:
 		angle = p[i].angle + p[i-i].angle
 	}
 
 	// use sin for x and cos for y here to "rotate" everything by 90 degrees
 	// making 0 be at "12 o'clock"
-	dirUnitCircle := pixel.V(math.Sincos(-1 * float64(config.RotationDirection) * angle))
+	dirUnitCircle := pixel.V(math.Sincos(-1 * float64(cfg.RotationDirection) * angle))
 	return p[i-1].position.Add(dirUnitCircle.Scaled(radius * powHalf(i)))
 }

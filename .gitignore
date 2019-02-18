@@ -1,3 +1,6 @@
 rotational-clock
-themes/*
 *.ignore
+
+#dirs
+themes
+.vscode
